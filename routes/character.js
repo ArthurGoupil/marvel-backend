@@ -9,6 +9,9 @@ const marvelPrk = process.env.MARVEL_PRK;
 const ts = Math.floor(new Date().getTime() / 1000);
 const hash = md5(ts + marvelPrk + marvelPuk);
 
+const isAuthenticated = require('../middleware/isAuthenticated');
+const User = require('../models/User');
+
 // GET MARVEL CHARACTERS
 router.get('/characters/page=:page', async (req, res) => {
   const page = req.params.page;
@@ -75,6 +78,20 @@ router.get('/characters/search=:search/page=:page', async (req, res) => {
           1)}&limit=${limitPerPage}&ts=${ts}&apikey=${marvelPuk}&hash=${hash}`
     );
     res.status(200).json(response.data.data);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
+  }
+});
+
+// PUT A CHARACTER IN FAVOURITES
+router.post('/character/favourite', isAuthenticated, async (req, res) => {
+  try {
+    const characterId = req.fields.characterId;
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    user.favourites.characters.push(characterId);
+    await user.save();
+    res.status(200).json(user.favourites);
   } catch (e) {
     res.status(400).json({ error: e.message });
   }

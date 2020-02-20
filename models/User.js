@@ -24,7 +24,7 @@ const User = mongoose.model('User', {
     characters: {
       type: Array,
       default: []
-    }
+    },
     comics: {
       type: Array,
       default: []
