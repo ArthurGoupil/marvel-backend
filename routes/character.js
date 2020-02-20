@@ -2,8 +2,6 @@ const express = require('express');
 const router = express.Router();
 md5 = require('js-md5');
 const axios = require('axios');
-const cors = require('cors');
-app.use(cors());
 
 const marvelPuk = process.env.MARVEL_PUK;
 const marvelPrk = process.env.MARVEL_PRK;
