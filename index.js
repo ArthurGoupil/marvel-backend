@@ -1,16 +1,16 @@
 const express = require('express');
-const app = express();
 const cors = require('cors');
-app.use(cors());
-
-// const mongoose = require('mongoose');
+const mongoose = require('mongoose');
 require('dotenv').config();
 
-// mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/marvel', {
-//   useNewUrlParser: true,
-//   useUnifiedTopology: true,
-//   useCreateIndex: true
-// });
+const app = express();
+app.use(cors());
+
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/marvel', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true
+});
 
 const characterRoutes = require('./routes/character');
 app.use(characterRoutes);
