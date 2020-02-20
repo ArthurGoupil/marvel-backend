@@ -50,17 +50,21 @@ router.get('/comics/search=:search/page=:page', async (req, res) => {
 });
 
 // PUT A COMIC IN FAVOURITES
-router.post('/comic/favourite', isAuthenticated, async (req, res) => {
-  try {
-    const comicId = req.fields.comicId;
-    const userId = req.user.id;
-    const user = await User.findById(userId);
-    user.favourites.comics.push(comicId);
-    await user.save();
-    res.status(200).json(user.favourites);
-  } catch (e) {
-    res.status(400).json({ error: e.message });
+router.post(
+  'https://marvel-goupil-backend.herokuapp.com/comic/favourite',
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const comicId = req.fields.comicId;
+      const userId = req.user.id;
+      const user = await User.findById(userId);
+      user.favourites.comics.push(comicId);
+      await user.save();
+      res.status(200).json(user.favourites);
+    } catch (e) {
+      res.status(400).json({ error: e.message });
+    }
   }
-});
+);
 
 module.exports = router;
