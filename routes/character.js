@@ -84,21 +84,17 @@ router.get('/characters/search=:search/page=:page', async (req, res) => {
 });
 
 // PUT A CHARACTER IN FAVOURITES
-router.post(
-  'https://marvel-goupil-backend.herokuapp.com/character/favourite',
-  isAuthenticated,
-  async (req, res) => {
-    try {
-      const characterId = req.fields.characterId;
-      const userId = req.user.id;
-      const user = await User.findById(userId);
-      user.favourites.characters.push(characterId);
-      await user.save();
-      res.status(200).json(user.favourites);
-    } catch (e) {
-      res.status(400).json({ error: e.message });
-    }
+router.post('/character/favourite', isAuthenticated, async (req, res) => {
+  try {
+    const characterId = req.fields.characterId;
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    user.favourites.characters.push(characterId);
+    await user.save();
+    res.status(200).json(user.favourites);
+  } catch (e) {
+    res.status(400).json({ error: e.message });
   }
-);
+});
 
 module.exports = router;
