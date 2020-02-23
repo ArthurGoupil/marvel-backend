@@ -8,7 +8,7 @@ const app = express();
 app.use(formidableMiddleware());
 app.use(cors());
 
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/marvel', {
+mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
   useCreateIndex: true
@@ -25,6 +25,6 @@ app.all('*', (req, res) => {
   res.json({ message: 'all routes.' });
 });
 
-app.listen(process.env.PORT || 3100, () => {
+app.listen(process.env.PORT, () => {
   console.log('Server has started.');
 });
