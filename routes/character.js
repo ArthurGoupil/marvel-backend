@@ -89,12 +89,48 @@ router.post('/character/favourite', isAuthenticated, async (req, res) => {
     const characterId = req.fields.characterId;
     const userId = req.user.id;
     const user = await User.findById(userId);
-    user.favourites.characters.push(characterId);
-    await user.save();
-    res.status(200).json(user.favourites);
+    const isAlreadyFavourite = user.favourites.characters.includes(characterId);
+
+    if (!isAlreadyFavourite) {
+      user.favourites.characters.push(characterId);
+      await user.save();
+      return res.status(200).json(user.favourites);
+    } else {
+      return res
+        .status(409)
+        .json({ error: 'Character is already in favourites.' });
+    }
   } catch (e) {
-    res.status(400).json({ error: e.message });
+    return res.status(400).json({ error: e.message });
   }
 });
+
+// REMOVE A CHARACTER FROM FAVOURITES
+router.post(
+  '/character/favourite/remove',
+  isAuthenticated,
+  async (req, res) => {
+    try {
+      const characterId = req.fields.characterId;
+      const userId = req.user.id;
+      const user = await User.findById(userId);
+      const isAlreadyFavourite = user.favourites.characters.includes(
+        characterId
+      );
+      const characterIndex = user.favourites.characters.indexOf(characterId);
+      if (isAlreadyFavourite) {
+        user.favourites.characters.splice(characterIndex, 1);
+        await user.save();
+        return res.status(200).json(user.favourites);
+      } else {
+        return res
+          .status(409)
+          .json({ error: 'Character is not in favourites.' });
+      }
+    } catch (e) {
+      return res.status(400).json({ error: e.message });
+    }
+  }
+);
 
 module.exports = router;

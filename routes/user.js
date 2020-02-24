@@ -4,6 +4,7 @@ const uid2 = require('uid2');
 const SHA256 = require('crypto-js/sha256');
 const encBase64 = require('crypto-js/enc-base64');
 const User = require('../models/User');
+const isAuthenticated = require('../middleware/isAuthenticated');
 
 // DEALING WITH SIGN-UP AND PASSWORD ENCRYPTION
 router.post('/user/sign_up', async (req, res) => {
@@ -68,6 +69,17 @@ router.post('/user/log_in', async (req, res) => {
         } else return res.status(400).json({ error: 'Unauthorized.' });
       } else return res.status(400).json({ error: 'Unauthorized.' });
     } else return res.status(400).json({ error: `Missing parameter(s)` });
+  } catch (e) {
+    return res.status(400).json({ error: e.message });
+  }
+});
+
+// GET USER FAVOURITES
+router.get('/user/favourites', isAuthenticated, async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const user = await User.findById(userId);
+    return res.status(200).json(user.favourites);
   } catch (e) {
     return res.status(400).json({ error: e.message });
   }
